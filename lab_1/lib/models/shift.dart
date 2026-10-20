@@ -11,11 +11,11 @@ class Shift {
     required this.startsAt,
     required this.slots,
     required this.place,
-    List<String> volunteers = const [],
+    this._volunteers = const [],
     this.online = false,
     this.notes,
     this.favourite = false,
-  }) : _volunteers = volunteers;
+  });
 
   Shift.empty()
     : id = DateTime.now().microsecondsSinceEpoch.toString(),
