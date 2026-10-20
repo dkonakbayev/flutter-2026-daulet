@@ -55,6 +55,7 @@ class _ShiftsTabState extends State<ShiftsTab> {
     final visible = _visible;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
