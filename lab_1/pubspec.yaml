@@ -1,5 +1,5 @@
 name: volunteer_shifts
-description: "A new Flutter project."
+description: "Volunteer Shifts — sign up for volunteering shifts (Lab 1)."
 publish_to: 'none'
 version: 0.1.0+1
 
@@ -17,3 +17,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/header.png
