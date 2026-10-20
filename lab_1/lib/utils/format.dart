@@ -25,8 +25,9 @@ String formatDateTime(DateTime d) =>
 
 String formatDuration(Duration d) {
   if (d.inDays >= 1) return '${d.inDays} d ${d.inHours % 24} h';
-  if (d.inHours >= 1)
+  if (d.inHours >= 1) {
     return '${d.inHours} h ${twoDigits(d.inMinutes % 60)} min';
+  }
   if (d.inMinutes >= 1) return '${d.inMinutes} min';
   return 'under a minute';
 }

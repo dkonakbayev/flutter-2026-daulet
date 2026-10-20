@@ -168,8 +168,9 @@ class _ShiftFormScreenState extends State<ShiftFormScreen> {
 
   String? _validatePlace(String? value) {
     final place = (value ?? '').trim();
-    if (place.isEmpty)
+    if (place.isEmpty) {
       return _online ? 'Enter a meeting link' : 'Enter an address';
+    }
     if (_online && !place.contains('://')) return 'A link must contain ://';
     return null;
   }

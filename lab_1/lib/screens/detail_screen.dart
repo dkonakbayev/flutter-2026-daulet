@@ -7,6 +7,7 @@ import '../models/shift.dart';
 import '../routes.dart';
 import '../utils/format.dart';
 import '../widgets/empty_state.dart';
+import '../widgets/icon_tile.dart';
 
 enum _MenuAction { edit, delete }
 
@@ -144,17 +145,11 @@ class _DetailScreenState extends State<DetailScreen> {
               itemBuilder: (context) => const [
                 PopupMenuItem(
                   value: _MenuAction.edit,
-                  child: ListTile(
-                    leading: Icon(Icons.edit_outlined),
-                    title: Text('Edit'),
-                  ),
+                  child: IconTile(icon: Icons.edit_outlined, title: 'Edit'),
                 ),
                 PopupMenuItem(
                   value: _MenuAction.delete,
-                  child: ListTile(
-                    leading: Icon(Icons.delete_outline),
-                    title: Text('Delete'),
-                  ),
+                  child: IconTile(icon: Icons.delete_outline, title: 'Delete'),
                 ),
               ],
             ),
@@ -259,23 +254,23 @@ class _AboutTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: 8),
       children: [
-        ListTile(
-          leading: const Icon(Icons.event),
-          title: Text(formatDateTime(shift.startsAt)),
-          subtitle: Text(shift.isPast ? 'Past' : 'Upcoming'),
+        IconTile(
+          icon: Icons.event,
+          title: formatDateTime(shift.startsAt),
+          subtitle: shift.isPast ? 'Past' : 'Upcoming',
         ),
-        ListTile(
-          leading: Icon(shift.online ? Icons.link : Icons.place_outlined),
-          title: Text(shift.place),
-          subtitle: Text(shift.online ? 'Online — meeting link' : 'Address'),
+        IconTile(
+          icon: shift.online ? Icons.link : Icons.place_outlined,
+          title: shift.place,
+          subtitle: shift.online ? 'Online — meeting link' : 'Address',
         ),
-        ListTile(
-          leading: const Icon(Icons.groups_outlined),
-          title: Text('$taken of ${shift.slots} places taken'),
-          subtitle: Text(free == 0 ? 'No free places' : '$free free'),
+        IconTile(
+          icon: Icons.groups_outlined,
+          title: '$taken of ${shift.slots} places taken',
+          subtitle: free == 0 ? 'No free places' : '$free free',
         ),
         if (shift.notes case final notes?)
-          ListTile(leading: const Icon(Icons.notes), title: Text(notes)),
+          IconTile(icon: Icons.notes, title: notes),
       ],
     );
   }
@@ -302,9 +297,10 @@ class _VolunteersTab extends StatelessWidget {
     return ListView(
       children: shift.volunteers.map((name) {
         final isMe = name.toLowerCase() == me.toLowerCase();
-        return ListTile(
-          leading: Icon(isMe ? Icons.person : Icons.person_outline),
-          title: Text(isMe ? '$name (You)' : name, style: isMe ? bold : null),
+        return IconTile(
+          icon: isMe ? Icons.person : Icons.person_outline,
+          title: isMe ? '$name (You)' : name,
+          titleStyle: isMe ? bold : null,
           tileColor: isMe ? scheme.primaryContainer : null,
         );
       }).toList(),
