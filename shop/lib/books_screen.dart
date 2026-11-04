@@ -1,37 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'models/book.dart';
+import 'models/cart.dart';
 import 'cart_badge.dart';
-import 'main.dart';
 
 class BooksScreen extends StatelessWidget {
-  const BooksScreen({super.key, required this.cart, required this.total, required this.onAdd});
-
-  final List<Book> cart;
-  final int total;
-  final void Function(Book) onAdd;
+  const BooksScreen({super.key});
 
   @override
-  Widget build(BuildContext context){
-    debugPrint('BooksScreen build');
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Books'),
-        actions: [CartBadge(count: cart.length, total: total)],
-      ),
+      appBar: AppBar(title: const Text('Books'), actions: const [CartBadge()]),
       body: ListView.builder(
         itemCount: books.length,
         itemBuilder: (context, index) {
-          final b = books[index];
-          debugPrint('row ${b.title}');
+          final book = books[index];
+
+          final isAdded = context.watch<Cart>().items.contains(book);
+
           return ListTile(
-            title: Text(b.title),
-            subtitle: Text(b.author),
-            trailing: cart.contains(b)
-              ? const Text('Added')
+            title: Text(book.title),
+            subtitle: Text(book.author),
+            trailing: isAdded
+                ? const Text('Added')
                 : OutlinedButton(
-              onPressed: () => onAdd(b),
-              child: const Text('Add'),
-            ),
+                    onPressed: () {
+                      final added = context.read<Cart>().add(book);
+
+                      if (added) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Added to cart'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text('Add'),
+                  ),
           );
         },
       ),
