@@ -115,8 +115,8 @@ The project was successfully tested.
 **Commands used:**
 
 ```bash
-flutter test
-flutter analyze
+- flutter test
+- flutter analyze
 ```
 
 **Final result:** The application passed all tests and static analysis checks.
