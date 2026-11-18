@@ -10,6 +10,7 @@ class UsersModel extends ChangeNotifier {
   final UserRepository _repo;
 
   List<User> items = const [];
+  bool fromCache = false;
   ApiException? error;
   bool loading = false;
 
@@ -18,7 +19,9 @@ class UsersModel extends ChangeNotifier {
     error = null;
     notifyListeners();
     try {
-      items = await _repo.getAll();
+      final r = await _repo.getAll();
+      items = r.items;
+      fromCache = r.fromCache;
     } on ApiException catch (e) {
       error = e;
     } finally {

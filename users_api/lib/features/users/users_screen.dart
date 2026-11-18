@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'new_user_screen.dart';
 import '../../core/api/api_exception.dart';
+import '../settings/settings_model.dart';
+import '../settings/settings_screen.dart';
+import 'new_user_screen.dart';
 import 'user.dart';
 import 'user_detail_screen.dart';
 import 'users_model.dart';
@@ -14,9 +16,20 @@ class UsersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final m = context.watch<UsersModel>();
+    final city = context.watch<SettingsModel>().city;
     return Scaffold(
-      appBar: AppBar(title: const Text('Users')),
-      body: _body(m),
+      appBar: AppBar(
+        title: const Text('Users'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const SettingsScreen())),
+          ),
+        ],
+      ),
+      body: _body(m, city),
       floatingActionButton: FloatingActionButton(
         onPressed: () =>
             Navigator.of(context)
@@ -26,10 +39,18 @@ class UsersScreen extends StatelessWidget {
     );
   }
 
-  Widget _body(UsersModel m) {
+  Widget _body(UsersModel m, String? city) {
     if (m.loading && m.items.isEmpty) return const LoadingView();
+    final shown = city == null
+        ? m.items
+        : m.items.where((u) => u.address.city == city).toList();
     return switch (m.error) {
-      null => UserList(m.items, onRefresh: m.load),
+      null => Column(
+        children: [
+          if (m.fromCache) StaleBanner(onRetry: m.load),
+          Expanded(child: UserList(shown, onRefresh: m.load)),
+        ],
+      ),
       NoConnectionException() => Offline(onRetry: m.load),
       NotFoundException() || UnauthorizedException() => const RequestError(),
       ServerException(:final status) => ServerError(status, onRetry: m.load),

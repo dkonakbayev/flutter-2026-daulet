@@ -8,21 +8,31 @@ import 'package:http/http.dart' as http;
 
 import 'api_exception.dart';
 
+import '../storage/secure_store.dart';
+
 class ApiClient {
-  ApiClient(this._client, {this.host = 'jsonplaceholder.typicode.com'});
+  ApiClient(
+    this._client,
+    this._store, {
+    this.host = 'jsonplaceholder.typicode.com',
+  });
 
   final http.Client _client;
+  final SecureStore _store;
   final String host;
 
-  Map<String, String> get _headers => {'Accept': 'application/json'};
+  Future<Map<String, String>> _headers() async => {
+    'Accept': 'application/json',
+    if (await _store.readToken() case final t?) 'Authorization': 'Bearer $t',
+  };
 
   Future<http.Response> get(Uri uri) =>
-      _send(() => _client.get(uri, headers: _headers));
+      _send(() async => _client.get(uri, headers: await _headers()));
 
   Future<http.Response> post(Uri uri, String body) => _send(
-    () => _client.post(
+    () async => _client.post(
       uri,
-      headers: {..._headers, 'Content-Type': 'application/json'},
+      headers: {...await _headers(), 'Content-Type': 'application/json'},
       body: body,
     ),
   );
