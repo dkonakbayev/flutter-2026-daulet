@@ -8,7 +8,13 @@ import 'new_user_screen.dart';
 import 'user.dart';
 import 'user_detail_screen.dart';
 import 'users_model.dart';
-import 'users_views.dart';
+
+import 'widgets/generic_error.dart';
+import 'widgets/loading_view.dart';
+import 'widgets/offline.dart';
+import 'widgets/request_error.dart';
+import 'widgets/server_error.dart';
+import 'widgets/stale_banner.dart';
 
 class UsersScreen extends StatelessWidget {
   const UsersScreen({super.key});
