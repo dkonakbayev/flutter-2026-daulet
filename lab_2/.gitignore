@@ -57,3 +57,6 @@ key.properties
 
 # API keys — passed with --dart-define-from-file=env/keys.json
 /env/keys.json
+
+# Windows folder settings
+desktop.ini
