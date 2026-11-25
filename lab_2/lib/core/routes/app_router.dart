@@ -10,20 +10,26 @@ import 'app_routes.dart';
 import 'home_screen.dart';
 
 abstract final class AppRouter {
-  static Route<dynamic>? generate(RouteSettings settings) {
-    final Widget? page = switch (settings.name) {
-      AppRoutes.login => const LoginScreen(),
-      AppRoutes.home => const HomeScreen(),
-      AppRoutes.countryDetail => CountryDetailScreen(
-        country: settings.arguments as Country,
-      ),
-      AppRoutes.tripForm => TripFormScreen(trip: settings.arguments as Trip?),
-      AppRoutes.about => const AboutScreen(),
-      _ => null,
-    };
-    if (page == null) return null;
-    return MaterialPageRoute<dynamic>(settings: settings, builder: (_) => page);
-  }
+  static Route<dynamic>? generate(RouteSettings settings) =>
+      switch (settings.name) {
+        AppRoutes.login => _page(settings, const LoginScreen()),
+        AppRoutes.home => _page(settings, const HomeScreen()),
+        AppRoutes.countryDetail => _page(
+          settings,
+          CountryDetailScreen(country: settings.arguments as Country),
+        ),
+        // typed: the caller awaits pushNamed<Trip>, which casts the route
+        // to Route<Trip?> — a Route<dynamic> would throw there
+        AppRoutes.tripForm => _page<Trip>(
+          settings,
+          TripFormScreen(trip: settings.arguments as Trip?),
+        ),
+        AppRoutes.about => _page(settings, const AboutScreen()),
+        _ => null,
+      };
+
+  static MaterialPageRoute<T> _page<T>(RouteSettings settings, Widget page) =>
+      MaterialPageRoute<T>(settings: settings, builder: (_) => page);
 
   /// One first route, chosen by the stored token — not '/' + '/login'.
   static List<Route<dynamic>> initial(String name) => [

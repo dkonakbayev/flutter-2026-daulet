@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3 (4) — 2026-11-26
+
+- "Add trip" and "Add to my trips" open the form again: the form route is typed `Route<Trip>`, so `pushNamed<Trip>` no longer fails its cast.
+
 ## 1.0.2 (3) — 2026-11-25
 
 - Catalogue moved to REST Countries v5 (`api.restcountries.com/countries/v5`): v3.1 was shut down and answered every request with a deprecation error.
