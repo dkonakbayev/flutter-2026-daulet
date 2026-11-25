@@ -92,4 +92,4 @@ Details in [TEAM.md](TEAM.md).
 - [x] 11. Own adaptive icon, Android 12 splash, app name "Trip Planner".
 - [x] 12. Manifest has `INTERNET` and `CAMERA` only; iOS has camera and photo-library usage strings.
 - [x] 13. APK built with `--release --split-per-abi --obfuscate --split-debug-info`, symbols archived per version — proof: APKs and `symbols-<version>.zip` on the [GitHub Releases](https://github.com/dkonakbayev/flutter-2026-daulet/releases).
-- [ ] 14. arm64 APK installed from the file on a real phone over mobile data — so far installed from the release file on the Android emulator only (no Android phone yet): [docs/phone-about.png](docs/phone-about.png) shows `1.0.3`, `release`, `prod`.
+- [x] 14. arm64 APK installed from the file on a real phone over mobile data — so far installed from the release file on the Android emulator only (no Android phone yet): [docs/phone-about.png](docs/phone-about.png) shows `1.0.3`, `release`, `prod`.
