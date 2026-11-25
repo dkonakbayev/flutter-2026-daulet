@@ -1,0 +1,28 @@
+$ keytool -printcert -file upload.cer   # the certificate of android/upload-keystore.jks
+Owner: CN=Daulet, OU=Mobile Development, O=Student, C=KZ
+Issuer: CN=Daulet, OU=Mobile Development, O=Student, C=KZ
+Serial number: 77f945d00dde1618
+Valid from: Wed Nov 25 22:41:57 GMT+05:00 2026 until: Sun Apr 12 22:41:57 GMT+05:00 2054
+Certificate fingerprints:
+	 SHA1: 50:D4:9D:D2:E0:01:25:98:07:96:3D:7B:56:0B:56:DA:58:11:BC:A4
+	 SHA256: 3E:20:6A:57:76:01:D1:19:09:03:7A:FA:DA:3E:9F:21:E5:27:42:28:77:6A:16:93:CD:21:0B:B9:D5:5C:DC:F5
+Signature algorithm name: SHA384withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 3
+
+Extensions: 
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 37 F2 03 20 3A D3 40 7E   5D C2 1E 74 57 12 91 DD  7.. :.@.]..tW...
+0010: 6C 4D 66 AC                                        lMf.
+]
+]
+
+
+$ apksigner verify --print-certs build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+V2 Signer: certificate DN: CN=Daulet, OU=Mobile Development, O=Student, C=KZ
+V2 Signer: certificate SHA-256 digest: 3e206a577601d11909037afada3e9f21e5274228776a1693cd210bb9d55cdcf5
+V2 Signer: certificate SHA-1 digest: 50d49dd2e001259807963d7b560b56da5811bca4
+V2 Signer: certificate MD5 digest: f73acb840039873968eb045e2c892b17

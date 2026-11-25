@@ -1,0 +1,6 @@
+{
+  "ENV": "prod",
+  "HOST": "REPLACE_WITH_ID.mockapi.io",
+  "COUNTRIES_HOST": "restcountries.com",
+  "USE_FAKES": false
+}
