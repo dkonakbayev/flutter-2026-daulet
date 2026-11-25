@@ -5,6 +5,7 @@ import '../auth/auth_model.dart';
 import '../users/users_model.dart';
 import '../profile/profile_screen.dart';
 import 'settings_model.dart';
+import 'about_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -50,6 +51,14 @@ class SettingsScreen extends StatelessWidget {
             ],
             onChanged: s.setCity,
           ),
+          ListTile(
+            leading: const Icon(Icons.info_outline),
+            title: const Text('About'),
+            subtitle: const Text('App information and version'),
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => const AboutScreen())),
+          ),
+          const SizedBox(height: 16),
           const SizedBox(height: 16),
           ListTile(
             leading: const Icon(Icons.logout),
