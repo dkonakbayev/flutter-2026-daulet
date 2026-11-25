@@ -18,7 +18,7 @@ partner, so every area has one owner and no second reviewer.
 
 ## Backend
 
-- **Catalogue:** REST Countries v3.1 — `https://restcountries.com/v3.1`
+- **Catalogue:** REST Countries v5 — `https://api.restcountries.com/countries/v5` (free API key, kept in the gitignored `env/keys.json`)
 - **Collection:** MockAPI.io, resource `trips` — `https://<project-id>.mockapi.io/api/v1/trips`
   (the host is `HOST` in `env/prod.json`, passed with `--dart-define-from-file`)
 
@@ -45,4 +45,5 @@ Paste the output of `git shortlog -sn` here on the day of the defence:
 5. After every create / update / delete the trips list is reloaded from the server. — Daulet
 6. REST Countries' 404 on a name search is shown as the empty state, not an error. — Daulet
 7. The offline cache lives in the documents directory, never in the temporary one. — Daulet
-8. Sign-in is fake (`FakeAuthRepository`, demo password `travel123`): the course has no auth server. — Daulet
+8. REST Countries v3.1 was shut down; the catalogue uses v5 with an API key that never goes into git. — Daulet
+9. Sign-in is fake (`FakeAuthRepository`, demo password `travel123`): the course has no auth server. — Daulet

@@ -1,11 +1,11 @@
 import '../../core/api/json_read.dart';
 
-/// One entry of the nested `currencies` map: `"EUR": {name, symbol}`.
+/// One entry of the nested `currencies` list: `{code, name, symbol}`.
 class Currency {
   const Currency({required this.code, required this.name, this.symbol});
 
-  factory Currency.fromJson(String code, Map<String, dynamic> json) => Currency(
-    code: code,
+  factory Currency.fromJson(Map<String, dynamic> json) => Currency(
+    code: json.read<String>('code'),
     name: json.read<String>('name'),
     symbol: json.read<String?>('symbol'),
   );
@@ -21,6 +21,7 @@ class Currency {
   );
 
   Map<String, dynamic> toJson() => {
+    'code': code,
     'name': name,
     if (symbol != null) 'symbol': symbol,
   };

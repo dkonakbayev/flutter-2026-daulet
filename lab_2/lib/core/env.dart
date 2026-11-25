@@ -1,6 +1,6 @@
 /// The only file that reads `--dart-define` values.
 ///
-///   flutter run --dart-define-from-file=env/prod.json
+///   flutter run --dart-define-from-file=env/prod.json ///     --dart-define-from-file=env/keys.json
 ///   flutter run --dart-define=USE_FAKES=true
 abstract final class Env {
   /// dev / prod — shown on the About screen.
@@ -15,8 +15,11 @@ abstract final class Env {
   /// The public catalogue API.
   static const countriesHost = String.fromEnvironment(
     'COUNTRIES_HOST',
-    defaultValue: 'restcountries.com',
+    defaultValue: 'api.restcountries.com',
   );
+
+  /// REST Countries v5 API key — from the gitignored env/keys.json.
+  static const countriesKey = String.fromEnvironment('COUNTRIES_KEY');
 
   /// true → the whole app runs on Fake… repositories, no network.
   static const useFakes = bool.fromEnvironment('USE_FAKES');

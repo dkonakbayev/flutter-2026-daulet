@@ -90,4 +90,18 @@ void main() {
     await api.get('/x');
     expect(seen.headers['Authorization'], 'Bearer tok_1');
   });
+
+  test('a public API key is sent when there is no user token', () async {
+    late http.BaseRequest seen;
+    final api = ApiClient(
+      MockClient((r) async {
+        seen = r;
+        return http.Response('{}', 200);
+      }),
+      host: 'api.restcountries.com',
+      apiKey: 'rc_key',
+    );
+    await api.get('/countries/v5');
+    expect(seen.headers['Authorization'], 'Bearer rc_key');
+  });
 }

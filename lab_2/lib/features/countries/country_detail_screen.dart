@@ -5,7 +5,7 @@ import 'countries_model.dart';
 import 'country.dart';
 import 'country_detail_body.dart';
 
-/// Shows the list's copy at once and asks `/alpha/{code}` for the rest
+/// Shows the list's copy at once and asks `/codes.alpha_3/{code}` for the fresh copy
 /// (timezones, borders, subregion).
 class CountryDetailScreen extends StatefulWidget {
   const CountryDetailScreen({super.key, required this.country});

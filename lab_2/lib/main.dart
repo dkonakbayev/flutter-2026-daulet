@@ -33,7 +33,7 @@ Future<void> main() async {
   final CountryRepository countries = Env.useFakes
       ? FakeCountryRepository(delay: delay)
       : HttpCountryRepository(
-          ApiClient.live(host: Env.countriesHost),
+          ApiClient.live(host: Env.countriesHost, apiKey: Env.countriesKey),
           CountriesCache(),
         );
   final TripRepository trips = Env.useFakes

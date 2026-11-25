@@ -3,21 +3,29 @@ import 'dart:io';
 
 import '../../core/api/api_client.dart';
 import '../../core/api/api_exception.dart';
+import '../../core/api/json_read.dart';
 import 'countries_cache.dart';
 import 'country.dart';
 import 'country_repository.dart';
 
-/// REST Countries v3.1. Search and region filter go through the API's own
-/// endpoints (`/name/{q}`, `/region/{r}`), never fetch-all-then-filter.
+/// REST Countries v5 (`api.restcountries.com/countries/v5`). Search and the
+/// region filter go through the API's own endpoints, never
+/// fetch-all-then-filter. Every answer is `{"data": {"objects": [...]}}`.
 class HttpCountryRepository implements CountryRepository {
   HttpCountryRepository(this._api, this._cache);
 
   final ApiClient _api;
   final CountriesCache _cache;
 
-  // /all refuses requests without `fields` (max 10).
-  static const _fields = {
-    'fields': 'name,cca3,capital,region,population,area,flags,maps,currencies,languages',
+  static const _base = '/countries/v5';
+
+  // Only what the app shows; the free plan allows up to 100 per page.
+  static const _query = {
+    'limit': '100',
+    'response_fields':
+        'names.common,names.official,codes.alpha_3,capitals,region,'
+        'subregion,population,area,flag.url_png,links.google_maps,'
+        'currencies,languages,timezones,borders',
   };
 
   @override
@@ -39,35 +47,38 @@ class HttpCountryRepository implements CountryRepository {
 
   Future<List<Country>> _fetch(String query, String? region) async {
     // Uri.https percent-encodes the path segments itself
-    final path = query.isNotEmpty
-        ? '/v3.1/name/$query'
-        : region != null
-        ? '/v3.1/region/$region'
-        : '/v3.1/all';
     final Object? body;
     try {
-      body = await _api.get(path, query: _fields);
+      body = query.isNotEmpty
+          ? await _api.get('$_base/name', query: {..._query, 'q': query})
+          : await _api.get(
+              region != null ? '$_base/region/$region' : _base,
+              query: _query,
+            );
     } on NotFoundException {
-      // REST Countries answers 404 when a name search matches nothing.
+      // nothing matched the search: the empty state, not an error
       if (query.isNotEmpty) return const [];
       rethrow;
     }
-    return _parse('countries', () {
-      final list = body as List<dynamic>;
-      return [
-        for (final j in list) Country.fromJson(j as Map<String, dynamic>),
-      ];
-    });
+    return _parse('countries', () => _objects(body));
   }
 
   @override
   Future<Country> getByCode(String code) async {
-    final body = await _api.get('/v3.1/alpha/$code');
-    return _parse('countries/$code', () {
-      // v3.1 answers /alpha with a one-element list
-      final json = body is List<dynamic> ? body.first : body;
-      return Country.fromJson(json as Map<String, dynamic>);
-    });
+    final body = await _api.get('$_base/codes.alpha_3/$code', query: _query);
+    final list = _parse('countries/$code', () => _objects(body));
+    if (list.isEmpty) throw const NotFoundException();
+    return list.first;
+  }
+
+  List<Country> _objects(Object? body) {
+    final data = (body as Map<String, dynamic>).read<Map<String, dynamic>>(
+      'data',
+    );
+    return [
+      for (final j in data.read<List<dynamic>>('objects'))
+        Country.fromJson(j as Map<String, dynamic>),
+    ];
   }
 
   T _parse<T>(String resource, T Function() parse) {

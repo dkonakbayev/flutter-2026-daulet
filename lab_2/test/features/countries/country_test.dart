@@ -1,19 +1,35 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trip_planner/features/countries/country.dart';
 
+/// A REST Countries v5 object, trimmed to the fields the app asks for.
 Map<String, dynamic> franceJson() => {
-  'cca3': 'FRA',
-  'name': {'common': 'France', 'official': 'French Republic'},
-  'capital': ['Paris'],
+  'codes': {'alpha_3': 'FRA'},
+  'names': {'common': 'France', 'official': 'French Republic'},
+  'capitals': [
+    {
+      'name': 'Paris',
+      'coordinates': {'lat': 48.87, 'lng': 2.33},
+    },
+  ],
   'region': 'Europe',
   'population': 67000000,
-  'area': 551695,
-  'flags': {'png': 'https://flagcdn.com/w320/fr.png'},
-  'maps': {'googleMaps': 'https://maps.example/fr'},
-  'currencies': {
-    'EUR': {'name': 'Euro', 'symbol': '€'},
+  'area': {'kilometers': 551695},
+  'flag': {'url_png': 'https://flags.restcountries.com/v5/w640/fr.png'},
+  'links': {'google_maps': 'https://maps.example/fr'},
+  'currencies': [
+    {'code': 'EUR', 'name': 'Euro', 'symbol': '€'},
+  ],
+  'languages': [
+    {'iso639_3': 'fra', 'name': 'French', 'native_name': 'français'},
+  ],
+};
+
+/// The v5 envelope around a list of objects.
+Map<String, dynamic> v5(List<Object> objects) => {
+  'data': {
+    'objects': objects,
+    'meta': {'total': objects.length},
   },
-  'languages': {'fra': 'French'},
 };
 
 void main() {

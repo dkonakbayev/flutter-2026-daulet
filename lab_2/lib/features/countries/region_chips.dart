@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'countries_model.dart';
 import 'regions.dart';
 
-/// Region filter; the request goes to `/v3.1/region/{name}`.
+/// Region filter; the request goes to `/countries/v5/region/{name}`.
 class RegionChips extends StatelessWidget {
   const RegionChips({super.key});
 

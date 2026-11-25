@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2 (3) — 2026-11-25
+
+- Catalogue moved to REST Countries v5 (`api.restcountries.com/countries/v5`): v3.1 was shut down and answered every request with a deprecation error.
+- The free API key comes from the gitignored `env/keys.json` and is sent only to REST Countries.
+
 ## 1.0.1 (2) — 2026-11-25
 
 - About shows the version as `1.0.1 (2)` with the build mode, environment and hosts.

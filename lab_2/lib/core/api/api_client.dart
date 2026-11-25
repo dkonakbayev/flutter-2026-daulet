@@ -16,15 +16,20 @@ class ApiClient {
     this._client, {
     required this.host,
     this._store,
+    this._apiKey,
     this.timeout = const Duration(seconds: 10),
   });
 
   /// The real network client; keeps `package:http` out of `main.dart`.
-  ApiClient.live({required String host, SecureStore? store})
-    : this(http.Client(), host: host, store: store);
+  ApiClient.live({required String host, SecureStore? store, String? apiKey})
+    : this(http.Client(), host: host, store: store, apiKey: apiKey);
 
   final http.Client _client;
   final SecureStore? _store;
+
+  /// A fixed key of a public API (REST Countries v5) for a client
+  /// without a [SecureStore]; the user's token always wins.
+  final String? _apiKey;
   final String host;
   final Duration timeout;
 
@@ -44,7 +49,7 @@ class ApiClient {
       _send('DELETE', path, expect: const {200, 204});
 
   Future<Map<String, String>> _headers({required bool json}) async {
-    final token = await _store?.readToken();
+    final token = await _store?.readToken() ?? _apiKey;
     return {
       'Accept': 'application/json',
       if (json) 'Content-Type': 'application/json; charset=utf-8',

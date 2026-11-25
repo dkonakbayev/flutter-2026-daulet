@@ -54,3 +54,6 @@ key.properties
 
 # obfuscation symbols, archived per version outside git
 /symbols/
+
+# API keys — passed with --dart-define-from-file=env/keys.json
+/env/keys.json

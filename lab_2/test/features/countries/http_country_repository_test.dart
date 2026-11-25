@@ -32,10 +32,11 @@ void main() {
     late Uri seen;
     final r = await repo((req) async {
       seen = req.url;
-      return _json([franceJson()]);
+      return _json(v5([franceJson()]));
     }).search(query: 'fra');
-    expect(seen.path, '/v3.1/name/fra');
-    expect(seen.queryParameters['fields'], contains('cca3'));
+    expect(seen.path, '/countries/v5/name');
+    expect(seen.queryParameters['q'], 'fra');
+    expect(seen.queryParameters['response_fields'], contains('alpha_3'));
     expect(r.items.single.name.common, 'France');
     expect(r.fromCache, isFalse);
   });
@@ -44,9 +45,9 @@ void main() {
     late Uri seen;
     await repo((req) async {
       seen = req.url;
-      return http.Response('[]', 200);
+      return _json(v5([]));
     }).search(region: 'Asia');
-    expect(seen.path, '/v3.1/region/Asia');
+    expect(seen.path, '/countries/v5/region/Asia');
   });
 
   test('a 404 on a name search is an empty list', () async {
@@ -56,21 +57,21 @@ void main() {
   });
 
   test('a wrong type → BadResponseException naming resource and field', () {
-    final bad = franceJson()..['area'] = 'big';
+    final bad = franceJson()..['population'] = 'big';
     expect(
-      repo((_) async => _json([bad])).search(),
+      repo((_) async => _json(v5([bad]))).search(),
       throwsA(
         isA<BadResponseException>().having(
           (e) => e.detail,
           'detail',
-          allOf(contains('countries'), contains('area')),
+          allOf(contains('countries'), contains('population')),
         ),
       ),
     );
   });
 
   test('offline with a cache → the saved list, flagged', () async {
-    await repo((_) async => _json([franceJson()])).search();
+    await repo((_) async => _json(v5([franceJson()]))).search();
     final r = await repo((_) => throw const SocketException('offline'))
         .search();
     expect(r.fromCache, isTrue);

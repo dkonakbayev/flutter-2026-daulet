@@ -2,7 +2,7 @@ import '../../core/api/json_read.dart';
 import 'country_name.dart';
 import 'currency.dart';
 
-/// One country of the catalogue (REST Countries v3.1).
+/// One country of the catalogue (REST Countries v5).
 class Country {
   const Country({
     required this.code,
@@ -20,28 +20,40 @@ class Country {
     this.borders = const [],
   });
 
+  /// REST Countries v5 object: `names`, `codes`, `capitals`, `area`,
+  /// `flag`, `links`, `currencies`, `languages` are nested.
   factory Country.fromJson(Map<String, dynamic> json) {
-    final capitals = json.read<List<dynamic>?>('capital') ?? const [];
-    final currencies = json.read<Map<String, dynamic>?>('currencies') ?? {};
-    final languages = json.read<Map<String, dynamic>?>('languages') ?? {};
+    final capitals = json.read<List<dynamic>?>('capitals') ?? const [];
+    final currencies = json.read<List<dynamic>?>('currencies') ?? const [];
+    final languages = json.read<List<dynamic>?>('languages') ?? const [];
     return Country(
-      code: json.read<String>('cca3'),
-      name: CountryName.fromJson(json.read<Map<String, dynamic>>('name')),
+      code: json.read<Map<String, dynamic>>('codes').read<String>('alpha_3'),
+      name: CountryName.fromJson(json.read<Map<String, dynamic>>('names')),
       region: json.read<String>('region'),
       population: json.read<num>('population').toInt(),
-      area: json.read<num>('area').toDouble(),
-      capital: capitals.isEmpty ? null : _string(capitals.first, 'capital'),
+      area: json
+          .read<Map<String, dynamic>>('area')
+          .read<num>('kilometers')
+          .toDouble(),
+      capital: capitals.isEmpty
+          ? null
+          : _map(capitals.first, 'capitals').read<String>('name'),
       subregion: json.read<String?>('subregion'),
-      flagUrl: json.read<Map<String, dynamic>?>('flags')?.read<String?>('png'),
+      flagUrl: json
+          .read<Map<String, dynamic>?>('flag')
+          ?.read<String?>('url_png'),
       mapsUrl: json
-          .read<Map<String, dynamic>?>('maps')
-          ?.read<String?>('googleMaps'),
+          .read<Map<String, dynamic>?>('links')
+          ?.read<String?>('google_maps'),
       currencies: [
-        for (final e in currencies.entries)
-          Currency.fromJson(e.key, _map(e.value, 'currencies')),
+        for (final c in currencies) Currency.fromJson(_map(c, 'currencies')),
       ],
       languages: {
-        for (final e in languages.entries) e.key: _string(e.value, 'languages'),
+        for (final l in languages)
+          _map(l, 'languages').read<String>('iso639_3'): _map(
+            l,
+            'languages',
+          ).read<String>('name'),
       },
       timezones: _strings(json.read<List<dynamic>?>('timezones'), 'timezones'),
       borders: _strings(json.read<List<dynamic>?>('borders'), 'borders'),
@@ -87,17 +99,21 @@ class Country {
   );
 
   Map<String, dynamic> toJson() => {
-    'cca3': code,
-    'name': name.toJson(),
+    'codes': {'alpha_3': code},
+    'names': name.toJson(),
     'region': region,
     'population': population,
-    'area': area,
-    'capital': [?capital],
+    'area': {'kilometers': area},
+    'capitals': [
+      if (capital != null) {'name': capital},
+    ],
     'subregion': ?subregion,
-    'flags': {'png': ?flagUrl},
-    'maps': {'googleMaps': ?mapsUrl},
-    'currencies': {for (final c in currencies) c.code: c.toJson()},
-    'languages': languages,
+    'flag': {'url_png': ?flagUrl},
+    'links': {'google_maps': ?mapsUrl},
+    'currencies': [for (final c in currencies) c.toJson()],
+    'languages': [
+      for (final e in languages.entries) {'iso639_3': e.key, 'name': e.value},
+    ],
     'timezones': timezones,
     'borders': borders,
   };
